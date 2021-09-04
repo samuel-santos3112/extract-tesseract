@@ -5,13 +5,17 @@ from app.services import ocr_service as ocr
 api = Blueprint('api', __name__, url_prefix='/api/v1')
 
 
-@api.route('/')
+@api.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-@api.route('/upload/ocr', methods=['GET', 'POST'])
-def upload_ocr():
-    return jsonify({'status' : 'ok'}, 200)
 
-    
-  
+@api.route('/upload/ocr', methods=['POST'])
+def upload_ocr():
+    image_path = ocr.saveImage(request)
+    processed_image = ocr.readImage(image_path)
+    return jsonify(processed_image), 200
+
+
+
+
